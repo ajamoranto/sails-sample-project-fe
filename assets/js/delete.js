@@ -27,12 +27,24 @@
  *
  */
 
- (function(){
+(function() {
 
-   $(function(){
+  $(function() {
 
-   	//code goes here
+    //code goes here
+    $("#student_id").addClass("selectpicker").attr("data-live-search", "true");
+    $("option").addClass("glyphicon glyphicon-user");
+    $("select").attr("data-header", "Select a student");
 
-   })
+    $('.selectpicker').selectpicker({
+      title: "Select a student",
+      style: 'btn-info',
+      size: 4
+      // tickIcon: "glyphicon glyphicon-user",
+      // showTick: true
+    });
 
- })();
+
+  })
+
+})();

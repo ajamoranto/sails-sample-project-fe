@@ -24,11 +24,41 @@
  *
  */
 
-(function(){
+(function() {
 
-  $(function(){
+  $(function() {
 
-  	//code goes here
+
+
+    //code goes here
+    $("#addStudentForm").validate({
+      errorClass: "text-danger",
+      rules: {
+        first_name: {
+          required: true,
+          minlength: 2
+        },
+        last_name: {
+          required: true,
+          minlength: 2
+        },
+        start_date: {
+          dateISO: true
+        }
+      },
+      messages: {
+        first_name: {
+          minlength: jQuery.validator.format("At least 2 characters required!")
+        },
+        last_name: {
+          minlength: jQuery.validator.format("At least 2 characters required!")
+        },
+        start_date: {
+          dateISO: jQuery.validator.format("yyyy-mm-dd")
+        }
+      }
+
+    });
 
   })
 

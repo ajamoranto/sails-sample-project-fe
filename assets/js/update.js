@@ -40,12 +40,114 @@
  *
  */
 
- (function(){
+(function() {
 
-   $(function(){
+  $(function() {
+    let selected;
 
     //code goes here
 
-   })
+    $("#updateStudentForm :input").prop("disabled", true);
 
- })();
+    $("#student_id").on("change", function() {
+      //enable input fields after we fill out the form
+      $("#updateStudentForm :input").prop("disabled", false);
+
+
+      selected = $(this).find("option:selected").val();
+
+
+
+      //store current student in variable for when we submit the form
+      //we need this to know what student we are updating
+      //variable declared on line 5
+
+
+      $.get("http://localhost:1337/student/" + selected, function(student) {
+
+        //loop over the student i got back from the api
+        $.each(student, function(key, val) {
+          //find the input field that matches the name of the key
+          let el = $('[name="' + key + '"]');
+          //find the type of field that we selected
+          let type = el.attr('type');
+
+          //based on the type choose how we set the value
+          switch (type) {
+            case 'checkbox':
+              el.attr('checked', 'checked');
+              break;
+            case 'radio':
+              el.filter('[value="' + val + '"]').attr('checked', 'checked');
+              break;
+            default:
+              el.val(val);
+          }
+        });
+      })
+
+    })
+
+
+    $("#updateStudentForm").on("submit", function(e){
+
+      //prevents default behavior of form submitting
+      e.preventDefault()
+
+      $.ajax({
+        url: "http://localhost:1337/student/" + selected,
+        data: $("#updateStudentForm").serialize(),
+        method: "PUT",
+        success: function(data){
+
+          //reload student table on success
+
+
+          //disable form fields again
+          $("#updateStudentForm :input").prop("disabled", true);
+
+          //reset form back to empty fields
+          $("#updateStudentForm")[0].reset()
+
+        }
+      })
+    })
+
+    $("#updateStudentForm").validate({
+      errorClass: "text-danger",
+      rules: {
+        first_name: {
+          required: true,
+          minlength: 2
+        },
+        last_name: {
+          required: true,
+          minlength: 2
+        },
+        start_date: {
+          dateISO: true
+        }
+      },
+      messages: {
+        first_name: {
+          minlength: "At least 2 characters required!"
+        },
+        last_name: {
+          minlength: "At least 2 characters required!"
+        },
+        start_date: {
+          dateISO: "yyyy-mm-dd"
+        }
+      }
+
+    });
+
+
+
+
+
+
+
+  })
+
+})();
